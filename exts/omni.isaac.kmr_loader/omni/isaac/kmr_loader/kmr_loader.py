@@ -10,7 +10,8 @@ import os
 ENVIRONMENT_BASE_PATH = "omniverse://localhost/NVIDIA/Assets/Isaac/2022.1/Isaac/Environments/"
 # KMR_PATH = "/home/jorgen/ros2-ws/src/kmr_description/urdf/robot/kmr.urdf"
 # KMR_PATH = "/home/jorgen/ros2-ws/src/kmr_description/urdf/robot/kmr_wo_wheels.urdf"
-KMR_PATH = "/home/jorgen/kmr_ws/src/kmr_description/urdf/robot/kmr_simple_camera_wo_wheels.urdf"
+# KMR_PATH = "/home/jorgen/kmr_ws/src/kmr_description/urdf/robot/kmr_simple_camera_wo_wheels.urdf"
+KMR_PATH = "/home/simen/git/kmr_ws/src/kmr_description/urdf/robot/kmr.urdf"
 # OMNIWHEELS_PATH = "<PATH/TO/REPO>/o3dynsimmodel/Parts"  # Somethimes the path below does not work. Follow appendix and use this path in stead
 OMNIWHEELS_PATH = f"{os.path.dirname(os.path.abspath(__file__))}/../../../data"
 
@@ -36,7 +37,7 @@ class KMRLoader(BaseSample):
     def setup_scene(self):
         disable_extension("omni.isaac.ros_bridge")
         print("[+] ROS Bridge disabled")
-        enable_extension("omni.isaac.ros2_bridge")
+        enable_extension("omni.isaac.ros2_bridge-humble")
         print("[+] ROS 2 Bridge enabled")
 
         self._stage = omni.usd.get_context().get_stage()
@@ -74,9 +75,9 @@ class KMRLoader(BaseSample):
             urdf_path=urdf_filepath,
             import_config=import_config
         )
-        self._base_link_frame_id = "base_link"
+        self._base_link_frame_id = "kmr_base_link"
         self._base_link_prim_path = f'{self._kmr_prim}/{self._base_link_frame_id}'  # Later set as the articulation root
-
+        print(f"[+] base_link_prim_path: {self._base_link_prim_path}")
         omni.kit.commands.execute("ChangeProperty",
                 prop_path=f"{self._kmr_prim}.xformOp:translate",
                 value=(0,0,0.025),
