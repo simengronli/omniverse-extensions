@@ -8,10 +8,11 @@ from omni.isaac.urdf import _urdf
 import os
 
 ENVIRONMENT_BASE_PATH = "omniverse://localhost/NVIDIA/Assets/Isaac/2022.1/Isaac/Environments/"
-# KMR_PATH = "/home/jorgen/ros2-ws/src/kmr_description/urdf/robot/kmr.urdf"
-# KMR_PATH = "/home/jorgen/ros2-ws/src/kmr_description/urdf/robot/kmr_wo_wheels.urdf"
-# KMR_PATH = "/home/jorgen/kmr_ws/src/kmr_description/urdf/robot/kmr_simple_camera_wo_wheels.urdf"
-KMR_PATH = "/home/simen/git/kmr_ws/src/kmr_description/urdf/robot/kmr.urdf"
+
+KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/robot/kmr.urdf"
+# KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/kmr_wo_wheels.urdf"
+# KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/robot/kmr_simple_camera_wo_wheels.urdf"
+
 # OMNIWHEELS_PATH = "<PATH/TO/REPO>/o3dynsimmodel/Parts"  # Somethimes the path below does not work. Follow appendix and use this path in stead
 OMNIWHEELS_PATH = f"{os.path.dirname(os.path.abspath(__file__))}/../../../data"
 
