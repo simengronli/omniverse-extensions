@@ -284,8 +284,7 @@ class KMRLoader(BaseSample):
                     ("on_playback_tick", "omni.graph.action.OnPlaybackTick"),
                     ("ros2_context", "omni.isaac.ros2_bridge.ROS2Context"),
                     ("isaac_read_sim_time", "omni.isaac.core_nodes.IsaacReadSimulationTime"),
-                    ("ros2_pub_tf_1", "omni.isaac.ros2_bridge.ROS2PublishTransformTree"),
-                    ("ros2_pub_tf_2", "omni.isaac.ros2_bridge.ROS2PublishTransformTree"),
+                    ("ros2_pub_tf", "omni.isaac.ros2_bridge.ROS2PublishTransformTree"),
                     ("isaac_compute_odom", "omni.isaac.core_nodes.IsaacComputeOdometry"),
                     ("ros2_pub_odom", "omni.isaac.ros2_bridge.ROS2PublishOdometry"),
                     ("ros2_pub_raw_tf", "omni.isaac.ros2_bridge.ROS2PublishRawTransformTree"),
@@ -293,18 +292,16 @@ class KMRLoader(BaseSample):
                 keys.SET_VALUES: [
                     ("ros2_context.outputs:context", ROS2_CONTEXT_DOMAIN_ID),
                     ("ros2_pub_raw_tf.inputs:topicName", "tf"),
-                    ("ros2_pub_odom.inputs:chassisFrameId", self._base_link_frame_id)
+                    ("ros2_pub_raw_tf.inputs:childFrameId", self._base_link_frame_id),
+                    ("ros2_pub_odom.inputs:chassisFrameId", self._base_link_frame_id),
                 ],
                 keys.CONNECT: [
-                    ("on_playback_tick.outputs:tick", "ros2_pub_tf_1.inputs:execIn"),
-                    ("on_playback_tick.outputs:tick", "ros2_pub_tf_2.inputs:execIn"),
+                    ("on_playback_tick.outputs:tick", "ros2_pub_tf.inputs:execIn"),
                     ("on_playback_tick.outputs:tick", "ros2_pub_raw_tf.inputs:execIn"),
                     ("on_playback_tick.outputs:tick", "isaac_compute_odom.inputs:execIn"),
                     ("on_playback_tick.outputs:tick", "ros2_pub_odom.inputs:execIn"),
-                    ("ros2_context.outputs:context", "ros2_pub_tf_1.inputs:context"),
-                    ("ros2_context.outputs:context", "ros2_pub_tf_2.inputs:context"),
-                    ("isaac_read_sim_time.outputs:simulationTime", "ros2_pub_tf_1.inputs:timeStamp"),
-                    ("isaac_read_sim_time.outputs:simulationTime", "ros2_pub_tf_2.inputs:timeStamp"),
+                    ("ros2_context.outputs:context", "ros2_pub_tf.inputs:context"),
+                    ("isaac_read_sim_time.outputs:simulationTime", "ros2_pub_tf.inputs:timeStamp"),
                     ("ros2_context.outputs:context", "ros2_pub_raw_tf.inputs:context"),
                     ("isaac_compute_odom.outputs:orientation", "ros2_pub_raw_tf.inputs:rotation"),
                     ("isaac_compute_odom.outputs:position", "ros2_pub_raw_tf.inputs:translation"),
@@ -318,17 +315,16 @@ class KMRLoader(BaseSample):
                 ]
             }
         )
-        ros2_pub_tf_1_prim = self._stage.GetPrimAtPath(f"{graph_path}/ros2_pub_tf_1")
-        ros2_pub_tf_1_prim.GetRelationship("inputs:targetPrims").AddTarget(self._base_link_prim_path)        
-        ros2_pub_tf_1_prim.GetRelationship("inputs:parentPrim").AddTarget(self._base_link_prim_path)     
+        ros2_pub_tf_prim = self._stage.GetPrimAtPath(f"{graph_path}/ros2_pub_tf")
+        ros2_pub_tf_prim.GetRelationship("inputs:parentPrim").AddTarget(self._base_link_prim_path)     
+        ros2_pub_tf_prim.GetRelationship("inputs:targetPrims").AddTarget(self._base_link_prim_path)        
+        ros2_pub_tf_prim.GetRelationship("inputs:targetPrims").AddTarget(f'{self._kmr_prim}/kmr_laser_B1_link')        
+        ros2_pub_tf_prim.GetRelationship("inputs:targetPrims").AddTarget(f'{self._kmr_prim}/kmr_laser_B4_link')
         
-        ros2_pub_tf_2_prim = self._stage.GetPrimAtPath(f"{graph_path}/ros2_pub_tf_2")
-        ros2_pub_tf_2_prim.GetRelationship("inputs:parentPrim").AddTarget(self._base_link_prim_path)
-        ros2_pub_tf_2_prim.GetRelationship("inputs:targetPrims").AddTarget(f'{self._kmr_prim}/kmr_laser_B1_link')        
-        ros2_pub_tf_2_prim.GetRelationship("inputs:targetPrims").AddTarget(f'{self._kmr_prim}/kmr_laser_B4_link')
 
         compute_odom_prim = self._stage.GetPrimAtPath(f"{graph_path}/isaac_compute_odom")
         compute_odom_prim.GetRelationship("inputs:chassisPrim").AddTarget(self._base_link_prim_path)
+
         print(f"[+] Created {graph_path}")
 
     def _setup_publish_clock_graph(self, keys):
