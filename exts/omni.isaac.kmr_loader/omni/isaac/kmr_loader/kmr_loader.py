@@ -248,6 +248,13 @@ class KMRLoader(BaseSample):
                 value=(0.5, 0.5, -0.5, -0.5),
                 prev=(0.5, 0.5, 0.5, 0.5)
             )
+
+            omni.kit.commands.execute("ChangeProperty",
+                prop_path=f"{prim_path}.visibility",
+                value="invisible",
+                prev=None
+            )
+
             self._camera_prim_paths[prim_path] = camera
             print(f"[+] Created {prim_path}")
 
