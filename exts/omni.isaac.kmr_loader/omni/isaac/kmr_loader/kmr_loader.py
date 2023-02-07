@@ -9,9 +9,9 @@ import os
 
 ENVIRONMENT_BASE_PATH = "omniverse://localhost/NVIDIA/Assets/Isaac/2022.1/Isaac/Environments/"
 
-KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/robot/kmr.urdf"
+# KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/robot/kmr.urdf"
 # KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/kmr_wo_wheels.urdf"
-# KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/robot/kmr_simple_camera_wo_wheels.urdf"
+KMR_PATH = f"/home/{os.getlogin()}/git/kmr_ws/src/kmr_description/urdf/robot/kmr_simple_camera_wo_wheels.urdf"
 
 # OMNIWHEELS_PATH = "<PATH/TO/REPO>/o3dynsimmodel/Parts"  # Somethimes the path below does not work. Follow appendix and use this path in stead
 OMNIWHEELS_PATH = f"{os.path.dirname(os.path.abspath(__file__))}/../../../data"
@@ -76,7 +76,7 @@ class KMRLoader(BaseSample):
             urdf_path=urdf_filepath,
             import_config=import_config
         )
-        self._base_link_frame_id = "kmr_base_link"
+        self._base_link_frame_id = "base_link"
         self._base_link_prim_path = f'{self._kmr_prim}/{self._base_link_frame_id}'  # Later set as the articulation root
         print(f"[+] base_link_prim_path: {self._base_link_prim_path}")
         omni.kit.commands.execute("ChangeProperty",
